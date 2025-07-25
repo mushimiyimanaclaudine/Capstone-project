@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ session['username'] }}!</h2>
+<p>Use the left menu to manage users, machines, and RFID tags.</p>
+{% endblock %}

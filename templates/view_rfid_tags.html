@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background-color: #ecf0f1; min-height: 80vh; padding: 40px 0; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 700px;">
+    <h2 style="text-align: center; color: #3498db; margin-bottom: 30px;">Registered RFID Tags</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul style="list-style-type: none; padding: 0;">
+          {% for category, message in messages %}
+            <li style="padding: 10px; margin-bottom: 5px; background-color: #dff0d8; color: #3c763d; border-radius: 5px;">
+              <strong>{{ category|capitalize }}:</strong> {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <table style="width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+      <thead style="background-color: #3498db; color: white; font-weight: 600;">
+        <tr>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Tag Value</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Description</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tag in tags %}
+        <tr style="text-align: center; border-bottom: 1px solid #ddd;">
+          <td style="padding: 12px;">{{ tag[1] }}</td>
+          <td style="padding: 12px;">{{ tag[2] }}</td>
+          <td style="padding: 12px;">
+            <a href="{{ url_for('edit_rfid_tag', tag_id=tag[0]) }}" 
+               style="background: #f39c12; color: white; padding: 8px 14px; text-decoration: none; border-radius: 8px; margin-right: 10px; font-weight: 600;">
+               Edit
+            </a>
+            <form action="{{ url_for('delete_rfid_tag', tag_id=tag[0]) }}" method="post" style="display:inline;" 
+                  onsubmit="return confirm('Are you sure you want to delete this RFID tag?');">
+              <button type="submit" style="background:red; color:white; border:none; padding: 8px 14px; cursor:pointer; border-radius: 8px; font-weight: 600;">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

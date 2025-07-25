@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Register Machine{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 30px;">Register Machine</h2>
+
+<div style="display: flex; justify-content: center;">
+  <form method="POST" style="background: #ecf0f1; padding: 30px 40px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 450px;">
+
+    <!-- Machine ID -->
+    <label for="machine_id">Machine ID:</label>
+    <input name="machine_id" required placeholder="Enter Machine ID"
+           style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+    <!-- Description -->
+    <label for="description">Description:</label>
+    <input name="description" required placeholder="Enter Description"
+           style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+    <!-- Select Student -->
+    <label for="user_id">Select Student (Reg Number - Name):</label>
+    <select name="user_id" required style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+      <option value="">-- Select Student --</option>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.reg_number }} - {{ user.full_name }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- Select RFID Tag -->
+    <label for="rfid_tag_id">Select RFID Tag:</label>
+    <select name="rfid_tag_id" required style="width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+      <option value="">-- Select RFID Tag --</option>
+      {% for tag in available_tags %}
+        <option value="{{ tag.id }}">{{ tag.tag_value }} - {{ tag.description }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- Buttons -->
+    <div style="display: flex; justify-content: space-between;">
+      <button type="submit"
+              style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+        Register Machine
+      </button>
+
+      
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

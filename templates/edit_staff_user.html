@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Staff User{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 30px;">Edit Staff User</h2>
+
+<div style="display: flex; justify-content: center;">
+  <form method="POST"
+        style="background: #ecf0f1; padding: 40px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 500px;"
+        onsubmit="return validatePhoneNumber();">
+
+    <!-- Username -->
+    <div style="margin-bottom: 20px;">
+      <label for="username" style="display: block; font-weight: bold; margin-bottom: 5px;">Username</label>
+      <input 
+          type="text" id="username" name="username" 
+          value="{{ user.username }}" 
+          placeholder="Username" required 
+          style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+    </div>
+
+    <!-- Email -->
+    <div style="margin-bottom: 20px;">
+      <label for="email" style="display: block; font-weight: bold; margin-bottom: 5px;">Email (Optional)</label>
+      <input 
+          type="email" id="email" name="email" 
+          value="{{ user.email }}" 
+          placeholder="Email"
+          style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+    </div>
+
+    <!-- Phone Number -->
+    <div style="margin-bottom: 20px;">
+      <label for="phone_number" style="display: block; font-weight: bold; margin-bottom: 5px;">Phone Number (10 digits)</label>
+      <input 
+          type="text" id="phone_number" name="phone_number" 
+          value="{{ user.phone_number }}" 
+          placeholder="078xxxxxxx" pattern="^\d{10}$" title="Phone number must be exactly 10 digits"
+          style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+    </div>
+
+    <!-- Department -->
+    <div style="margin-bottom: 20px;">
+      <label for="department" style="display: block; font-weight: bold; margin-bottom: 5px;">Department</label>
+      <input 
+          type="text" id="department" name="department" 
+          value="{{ user.department }}" 
+          placeholder="Department" required 
+          style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+    </div>
+
+    <!-- Role -->
+    <div style="margin-bottom: 25px;">
+      <label for="role" style="display: block; font-weight: bold; margin-bottom: 5px;">Role</label>
+      <select id="role" name="role" required 
+              style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+        <option value="lab assistant" {% if user.role == 'lab assistant' %}selected{% endif %}>lab assistant</option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+            style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%;">
+      Update User
+    </button>
+  </form>
+</div>
+
+<script>
+  function validatePhoneNumber() {
+    const phone = document.getElementById("phone_number").value.trim();
+    if (phone !== "" && !/^\d{10}$/.test(phone)) {
+      alert("Phone number must be exactly 10 digits.");
+      return false;
+    }
+    return true;
+  }
+</script>
+{% endblock %}

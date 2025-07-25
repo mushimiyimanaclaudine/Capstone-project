@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+    }
+
+    /* Top Navbar */
+    .topnav {
+      width: 100%;
+      background-color: #3498db;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      height: 50px;
+    }
+
+    .topnav .profile-dropdown {
+      position: relative;
+      color: white;
+      cursor: pointer;
+    }
+
+    #dropdownMenu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 40px;
+      background-color: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-width: 150px;
+      text-align: left;
+    }
+
+    #dropdownMenu a {
+      display: block;
+      padding: 10px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    #dropdownMenu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      margin-top: 22px;
+      position: fixed;
+      top: 50px;
+      left: 0;
+      width: 200px;
+      height: calc(100vh - 50px);
+      background: #3498db;
+      color: white;
+      padding: 10px;
+    }
+
+    .sidebar h1 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .nav-links a:hover {
+      background: #2980b9;
+    }
+
+    .main-content {
+      margin-left: 200px;
+      margin-top: 50px;
+      padding: 20px;
+      width: calc(100% - 200px);
+    }
+
+    /* Popup style */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background: #e74c3c;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      font-size: 16px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <div class="topnav bg-success">
+    <div style="color: white; font-size: 20px;">RFID System</div>
+    <div class="profile-dropdown" onclick="toggleDropdown()">
+      👤 {{ session.get('username', 'User') }} ▼
+      <div id="dropdownMenu">
+        <a href="{{ url_for('profile') }}">My Profile</a>
+        <a href="{{ url_for('change_admin_password') }}">Change Password</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <!-- Sidebar -->
+<div class="sidebar">
+  <h1>Menu</h1>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    
+    {% if session.get('role', '').lower() == 'admin' %}
+      <a class="nav-link" href="/register">Add User</a>
+    {% endif %}
+     
+     {% if session.get('role') == 'admin' %}
+  <a href="{{ url_for('view_staff_users') }}">Manage Staff Users</a>
+{% endif %}
+
+
+    <a href="{{ url_for('add_user') }}">Add Student</a>
+    <a href="{{ url_for('register_machine') }}">Register Machine</a>
+    <a href="{{ url_for('add_rfid_tag') }}">Add RFID Tag</a>
+    <a href="{{ url_for('view_rfid_tags') }}">View RFID Tags</a>
+    <a href="{{ url_for('view_machines') }}">View Machines</a>
+    <a href="{{ url_for('view_events') }}">View Events</a>
+    <a href="{{ url_for('view_users') }}">View Students</a>
+  </div>
+</div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Popup -->
+  <div id="popup">🚨 Laptop moved without permission! Email sent to admin.</div>
+
+  <script>
+    // Dropdown toggle
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function (e) {
+      const menu = document.getElementById('dropdownMenu');
+      const trigger = document.querySelector('.profile-dropdown');
+      if (!trigger.contains(e.target)) {
+        menu.style.display = 'none';
+      }
+    });
+
+    // Alert audio & popup
+    const audio = new Audio("{{ url_for('static', filename='alert.mp3') }}");
+    let lastAlertId = sessionStorage.getItem('lastAlertId');
+
+    function checkForUnauthorizedAccess() {
+      fetch("/check_alerts")
+        .then(response => response.json())
+        .then(data => {
+          if (data.alert && data.alert_id !== lastAlertId) {
+            lastAlertId = data.alert_id;
+            sessionStorage.setItem('lastAlertId', data.alert_id);
+            document.getElementById('popup').style.display = 'block';
+            audio.play().catch(err => console.log("Sound error:", err));
+            setTimeout(() => document.getElementById('popup').style.display = 'none', 5000);
+          }
+        })
+        .catch(err => console.error("Fetch error:", err));
+    }
+
+    // Preload alert sound
+    window.addEventListener('click', function preloadAudio() {
+      audio.play().catch(() => {});
+      audio.pause();
+      audio.currentTime = 0;
+      window.removeEventListener('click', preloadAudio);
+    });
+
+    // Check every 5 seconds
+    setInterval(checkForUnauthorizedAccess, 5000);
+  </script>
+
+</body>
+</html>

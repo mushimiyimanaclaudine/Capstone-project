@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RFID Event Logs</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header bar styling */
+        header {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Navigation links inside header */
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+
+        /* Container for the content */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Table row hover effect */
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        /* Alternate row colors */
+        tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        /* Responsive table: make it scrollable on small screens */
+        @media (max-width: 768px) {
+            table {
+                overflow-x: auto;
+                display: block;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        /* Color coding for event types */
+        .access-granted {
+            color: green;
+        }
+
+        .unauthorized {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RFID Event Logs</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Latest RFID Access Events</h2>
+        <table id="eventTable">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>RFID Tag</th>
+                    <th>Event</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Event rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch the events data from Flask
+        fetch('/events')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#eventTable tbody');
+                data.forEach(event => {
+                    const row = document.createElement('tr');
+                    
+                    // Add color coding based on event type
+                    let eventClass = '';
+                    if (event.event === 'Access Granted') {
+                        eventClass = 'access-granted';
+                    } else if (event.event === 'Unauthorized Access') {
+                        eventClass = 'unauthorized';
+                    }
+
+                    row.innerHTML = `
+                        <td>${event.timestamp}</td>
+                        <td>${event.rfid_tag}</td>
+                        <td class="${eventClass}">${event.event}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+    </script>
+</body>
+</html>

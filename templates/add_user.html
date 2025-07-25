@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Add Student {% endblock %}
+
+{% block content %}
+<style>
+  /* Flash message styles */
+  .flash-message {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    color: white;
+  }
+  .flash-error {
+    background-color: #e74c3c;
+  }
+  .flash-success {
+    background-color: #27ae60;
+  }
+</style>
+
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 30px;">Add New Student</h2>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 75vh;">
+    <form method="POST"
+          style="background: #ecf0f1; padding: 40px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 400px;">
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul style="list-style-type: none; padding: 0; margin-bottom: 20px;">
+              {% for category, message in messages %}
+                <li class="flash-message flash-{{ category }}">
+                  {{ message }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <input
+            name="full_name"
+            placeholder="Enter Full Name"
+            required
+            value="{{ request.form.full_name or '' }}"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <input
+            name="reg_number"
+            placeholder="Enter Registration Number"
+            pattern="^\d{2}RP\d{5}$"
+            title="Registration number must be 9 characters: 2 digits + 'RP' + 5 digits, e.g., 23RP00498"
+            required
+            value="{{ request.form.reg_number or '' }}"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <input
+            name="email"
+            type="email"
+            placeholder="Enter Email (optional)"
+            value="{{ request.form.email or '' }}"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <input
+            name="phone_number"
+            placeholder="Enter Phone Number (10 digits)"
+            pattern="^\d{10}$"
+            title="Phone number must be exactly 10 digits"
+            required
+            value="{{ request.form.phone_number or '' }}"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <input
+            name="department"
+            placeholder="Enter Department (optional)"
+            value="{{ request.form.department or '' }}"
+            style="width: 100%; padding: 15px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <button type="submit"
+            style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+            Register Student
+        </button>
+    </form>
+</div>
+{% endblock %}

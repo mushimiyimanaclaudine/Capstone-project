@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 30px;">Edit Student</h2>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 75vh;">
+    <form method="POST" style="background: #ecf0f1; padding: 40px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 400px;">
+
+        <!-- Full Name -->
+        <input name="full_name" value="{{ user[1] }}" placeholder="Full Name" required 
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <!-- Registration Number -->
+        <input name="reg_number" value="{{ user[2] }}" placeholder="Registration Number" required 
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <!-- Email -->
+        <input name="email" value="{{ user[3] }}" placeholder="Email"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <!-- Phone Number -->
+        <input name="phone_number" value="{{ user[4] or '' }}" placeholder="Phone Number"
+            style="width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <!-- Department -->
+        <input name="department" value="{{ user[5] }}" placeholder="Department"
+            style="width: 100%; padding: 15px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+        <!-- Buttons -->
+        <div style="display: flex; justify-content: space-between;">
+            <button type="submit" 
+                style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                Update Student
+            </button>
+
+            <a href="{{ url_for('view_users') }}"
+                style="background-color: #3498db; color: white; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-size: 16px;">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

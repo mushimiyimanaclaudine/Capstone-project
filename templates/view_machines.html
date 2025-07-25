@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Registered Machines{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 15px;">Registered Machines</h2>
+
+<div style="display: flex; justify-content: center;">
+  <div style="background: #ecf0f1; padding: 30px 40px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); width: 1000px;">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul style="list-style-type: none; padding: 0; margin-bottom: 20px;">
+          {% for category, message in messages %}
+            <li style="padding: 10px; margin-bottom: 5px; background-color: #dff0d8; color: #3c763d; border-radius: 5px;">
+              <strong>{{ category|capitalize }}:</strong> {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search machines or students..." 
+           style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+
+    <table id="machinesTable" style="width: 100%; border-collapse: collapse; background: white;">
+      <thead style="background-color: #3498db; color: white; font-weight: 600;">
+        <tr>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Machine ID</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Description</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Student Reg Number</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Student Name</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">RFID Tag</th>
+          <th style="padding: 12px; border-bottom: 2px solid #2980b9;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for machine in machines %}
+        <tr style="text-align: center; border-bottom: 1px solid #ddd;">
+          <td style="padding: 12px;">{{ machine.machine_id }}</td>
+          <td style="padding: 12px;">{{ machine.description }}</td>
+          <td style="padding: 12px;">
+            {% if machine.reg_number %}
+              {{ machine.reg_number }}
+            {% else %}
+              <span style="color: gray;">Not Assigned</span>
+            {% endif %}
+          </td>
+          <td style="padding: 12px;">
+            {% if machine.user_name %}
+              {{ machine.user_name }}
+            {% else %}
+              <span style="color: gray;">Not Assigned</span>
+            {% endif %}
+          </td>
+          <td style="padding: 12px;">
+            {% if machine.tag_value %}
+              {{ machine.tag_value }}
+            {% else %}
+              <span style="color: gray;">None</span>
+            {% endif %}
+          </td>
+          <td style="padding: 12px;">
+            <a href="{{ url_for('edit_machine', id=machine.id) }}" 
+               style="background: #f39c12; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px; margin-right:5px;">
+               Edit
+            </a>
+            <form action="{{ url_for('delete_machine', machine_id=machine.id) }}" method="post" style="display:inline;" 
+                  onsubmit="return confirm('Are you sure you want to delete this machine?');">
+              <button type="submit" style="background:red; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:4px;">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<script>
+  function filterTable() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#machinesTable tbody tr");
+
+    rows.forEach(row => {
+      const rowText = row.textContent.toLowerCase();
+      row.style.display = rowText.includes(input) ? "" : "none";
+    });
+  }
+</script>
+
+{% endblock %}

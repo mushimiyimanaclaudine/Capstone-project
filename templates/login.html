@@ -1,0 +1,32 @@
+{% extends "auth.html" %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block heading %}Admin Login{% endblock %}
+
+{% block form %}
+<form method="POST" action="{{ url_for('login') }}">
+    <div class="mb-3">
+        <input
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required
+            autofocus>
+    </div>
+    <div class="mb-3">
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+
+<div class="mt-3 text-center link-small">
+    <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+</div>
+{% endblock %}

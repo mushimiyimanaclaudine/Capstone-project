@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ 'Edit' if tag else 'Add' }} RFID Tag</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background: #ecf0f1;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            width: 380px; /* Medium size */
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            color: #3498db;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 6px rgba(52, 152, 219, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        button, .cancel-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            color: white;
+            flex: 1;
+            text-align: center;
+        }
+
+        button {
+            background-color: #3498db;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .cancel-btn {
+            background-color: #3498db;
+            text-decoration: none;
+            line-height: 36px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>{{ 'Edit' if tag else 'Add' }} RFID Tag</h2>
+    <form method="POST" action="{{ form_action }}">
+
+        <input 
+            type="text" 
+            name="tag_value" 
+            placeholder="Enter RFID Tag Value"
+            value="{{ tag[1] if tag else '' }}"
+            required
+        >
+
+        <input 
+            type="text" 
+            name="description" 
+            placeholder="Enter Description"
+            value="{{ tag[2] if tag else '' }}"
+            required
+        >
+
+        <select name="status" required>
+            <option value="" disabled {% if not tag %}selected{% endif %}>Select Status</option>
+            <option value="available" {% if tag and tag[3] == 'available' %}selected{% endif %}>Available</option>
+            <option value="assigned" {% if tag and tag[3] == 'assigned' %}selected{% endif %}>Assigned</option>
+        </select>
+
+        <div class="button-group">
+            <button type="submit">{{ 'Update Tag' if tag else 'Add Tag' }}</button>
+            <a href="{{ url_for('view_rfid_tags') }}" class="cancel-btn">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
