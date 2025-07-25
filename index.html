@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - RFID Laptop Security</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #005792;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #eeeeee;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #ddd;
+            padding: 10px;
+            text-align: center;
+            color: #444;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RFID Laptop Security Dashboard</h1>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('view_logs') }}">Movement Logs</a>
+        <a href="{{ url_for('view_users') }}">Manage Users</a>
+        <a href="{{ url_for('register_machine') }}">Register Machine</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+
+    <div class="content">
+        <h2>Welcome, Admin!</h2>
+        <p>Use the menu above to manage users, track laptops, or view logs.</p>
+    </div>
+
+    <footer>
+        &copy; {{ current_year }} RP-Ngoma College - RFID Security System
+    </footer>
+
+</body>
+</html>
