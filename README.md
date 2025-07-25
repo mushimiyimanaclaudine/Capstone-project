@@ -6,7 +6,7 @@ This project provides a **real-time RFID-based tracking and alert system** for s
 ## Key Features
 
 **Login system** with two roles: `Admin` and `Lab Assistant`
-**RFID event logging** (unauthorized access triggers buzzer & email alert)
+**RFID event logging** (unauthorized movement of laptop  triggers buzzer & email alert)
 **Forgot Password / Reset Password** functionality via email
 **Change Password** after login
 **View & manage users (staff)** — only accessible to admins
@@ -42,3 +42,17 @@ Capstone-project/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+Follow the steps below to set up and run this project locally on your computer:
+
+1. Clone the Repository
+git clone https://github.com/mushimiyimanaclaudine/Capstone-project.git
+cd Capstone-project
+2. Create a Virtual Environment
+
+python -m venv venv
+
+3. Activate the Virtual Environment
+
+Windows: venv\Scripts\activate
+4. Install Dependencies
+pip install -r requirements.txt
