@@ -180,7 +180,8 @@
     });
 
     // Alert audio & popup
-    const audio = new Audio("{{ url_for('static', filename='alert.mp3') }}");
+   const audio = new Audio("{{ url_for('static', filename='sounds/alert.mp3') }}");
+
     let lastAlertId = sessionStorage.getItem('lastAlertId');
 
     function checkForUnauthorizedAccess() {
