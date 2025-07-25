@@ -112,6 +112,21 @@
       font-size: 16px;
       z-index: 1000;
     }
+
+    /* Enable Sound Button */
+    #enableSoundBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 2000;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -130,30 +145,28 @@
   </div>
 
   <!-- Sidebar -->
-  <!-- Sidebar -->
-<div class="sidebar">
-  <h1>Menu</h1>
-  <div class="nav-links">
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    
-    {% if session.get('role', '').lower() == 'admin' %}
-      <a class="nav-link" href="/register">Add User</a>
-    {% endif %}
-     
-     {% if session.get('role') == 'admin' %}
-  <a href="{{ url_for('view_staff_users') }}">Manage Staff Users</a>
-{% endif %}
+  <div class="sidebar">
+    <h1>Menu</h1>
+    <div class="nav-links">
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
 
+      {% if session.get('role', '').lower() == 'admin' %}
+        <a class="nav-link" href="/register">Add User</a>
+      {% endif %}
 
-    <a href="{{ url_for('add_user') }}">Add Student</a>
-    <a href="{{ url_for('register_machine') }}">Register Machine</a>
-    <a href="{{ url_for('add_rfid_tag') }}">Add RFID Tag</a>
-    <a href="{{ url_for('view_rfid_tags') }}">View RFID Tags</a>
-    <a href="{{ url_for('view_machines') }}">View Machines</a>
-    <a href="{{ url_for('view_events') }}">View Events</a>
-    <a href="{{ url_for('view_users') }}">View Students</a>
+      {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('view_staff_users') }}">Manage Staff Users</a>
+      {% endif %}
+
+      <a href="{{ url_for('add_user') }}">Add Student</a>
+      <a href="{{ url_for('register_machine') }}">Register Machine</a>
+      <a href="{{ url_for('add_rfid_tag') }}">Add RFID Tag</a>
+      <a href="{{ url_for('view_rfid_tags') }}">View RFID Tags</a>
+      <a href="{{ url_for('view_machines') }}">View Machines</a>
+      <a href="{{ url_for('view_events') }}">View Events</a>
+      <a href="{{ url_for('view_users') }}">View Students</a>
+    </div>
   </div>
-</div>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -162,6 +175,9 @@
 
   <!-- Popup -->
   <div id="popup">🚨 Laptop moved without permission! Email sent to admin.</div>
+
+  <!-- Enable sound button for autoplay policy -->
+  <button id="enableSoundBtn">Enable Sound</button>
 
   <script>
     // Dropdown toggle
@@ -180,15 +196,22 @@
     });
 
     // Alert audio & popup
-   const audio = new Audio("{{ url_for('static', filename='sounds/alert.mp3') }}");
+    const audio = new Audio("{{ url_for('static', filename='sounds/alert.mp3') }}");
 
     let lastAlertId = sessionStorage.getItem('lastAlertId');
 
     function checkForUnauthorizedAccess() {
       fetch("/check_alerts")
-        .then(response => response.json())
+        .then(response => {
+          console.log("Fetch /check_alerts response status:", response.status);
+          return response.json();
+        })
         .then(data => {
+          console.log("Alert check data:", data);
+
           if (data.alert && data.alert_id !== lastAlertId) {
+            console.log("🚨 New alert detected! Playing sound and showing popup.");
+
             lastAlertId = data.alert_id;
             sessionStorage.setItem('lastAlertId', data.alert_id);
             document.getElementById('popup').style.display = 'block';
@@ -199,12 +222,15 @@
         .catch(err => console.error("Fetch error:", err));
     }
 
-    // Preload alert sound
-    window.addEventListener('click', function preloadAudio() {
-      audio.play().catch(() => {});
-      audio.pause();
-      audio.currentTime = 0;
-      window.removeEventListener('click', preloadAudio);
+    // Enable sound button for user interaction
+    const enableSoundBtn = document.getElementById('enableSoundBtn');
+    enableSoundBtn.addEventListener('click', () => {
+      audio.play().then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        console.log("Sound enabled by user interaction.");
+        enableSoundBtn.style.display = 'none';
+      }).catch(err => console.log("Error enabling sound:", err));
     });
 
     // Check every 5 seconds
