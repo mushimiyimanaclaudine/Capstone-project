@@ -18,13 +18,6 @@ s = URLSafeTimedSerializer('hzxkdiivohfdizka')  # Use the same secret key as Fla
 
 
 from datetime import datetime
-import pytz
-
-def get_local_time():
-    kigali = pytz.timezone('Africa/Kigali')
-    now = datetime.now(kigali)
-    return now.strftime('%Y-%m-%d %H:%M:%S')
-
 import threading
 import bcrypt
 import webbrowser
